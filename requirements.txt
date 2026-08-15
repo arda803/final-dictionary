@@ -1,0 +1,4 @@
+PyQt6>=6.4.0
+PyQt6-Qt6>=6.4.0
+openpyxl>=3.0.10
+edge-tts>=6.1.0

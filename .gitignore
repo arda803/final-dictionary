@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# Uygulama Verileri ve Önbellek
+dictionary.db
+audio_cache/
+settings.json
+
+# IDE ve Sistem Dosyaları
+.vscode/
+.idea/
+.DS_Store
