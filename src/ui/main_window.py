@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import (
     QMenuBar, QMenu, QStatusBar, QDialog, QInputDialog, QFrame
 )
 from PyQt6.QtCore import Qt, QTimer
-from PyQt6.QtGui import QAction, QFont, QKeySequence
+
 
 from ..database import DictionaryDB
 from ..tts import TTSManager
@@ -681,7 +681,9 @@ class MainWindow(QMainWindow):
             "• Koyu/Açık tema<br>"
             "• JSON/Excel/TXT içe/dışa aktarma"
         )
-
+    def open_contact_dialog(self):
+            dialog = ContactDialog(self)
+            dialog.exec()
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_Delete:
             if self.list_widget.hasFocus():
