@@ -22,7 +22,7 @@ from ..themes import ThemeManager
 from .widgets import DetailPanel
 from .dialogs import SettingsDialog, QuizDialog, AddEntryDialog, MoveEntryDialog
 from PyQt6.QtGui import QAction, QFont, QKeySequence, QIcon  # ← QIcon ekle
-
+from dialogs import ContactDialog  # Diğer dialog importlarının yanına ekleyin
 
 class MainWindow(QMainWindow):
     def __init__(self):
