@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import (
     QMenuBar, QMenu, QStatusBar, QDialog, QInputDialog, QFrame
 )
 from PyQt6.QtCore import Qt, QTimer
-from PyQt6.QtGui import QAction, QFont, QKeySequence
+
 
 from ..database import DictionaryDB
 from ..tts import TTSManager
@@ -20,16 +20,17 @@ from ..utils import (
 )
 from ..themes import ThemeManager
 from .widgets import DetailPanel
-from .dialogs import SettingsDialog, QuizDialog, AddEntryDialog, MoveEntryDialog
-from PyQt6.QtGui import QAction, QFont, QKeySequence, QIcon  # ← QIcon ekle
+
+from .dialogs import SettingsDialog, QuizDialog, AddEntryDialog, MoveEntryDialog, ContactDialog
+from PyQt6.QtGui import QAction, QFont, QKeySequence, QIcon
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowIcon(QIcon("logo.ico"))  # ← BUNU EKLE
+        self.setWindowIcon(QIcon("logo.ico"))
         self.settings = SettingsManager()
-        # ... devamı
+
         self.db = DictionaryDB()
         self.tts = TTSManager()
         self.theme_manager = ThemeManager()
@@ -148,6 +149,10 @@ class MainWindow(QMainWindow):
         shortcuts_action.triggered.connect(self.show_shortcuts)
         help_menu.addAction(shortcuts_action)
 
+        contact_action = QAction("📬 İletişim & Geri Bildirim", self)
+        contact_action.triggered.connect(self.open_contact_dialog)
+        help_menu.addAction(contact_action)
+
         about_action = QAction("ℹ Hakkında", self)
         about_action.triggered.connect(self.show_about)
         help_menu.addAction(about_action)
@@ -171,7 +176,6 @@ class MainWindow(QMainWindow):
 
         toolbar.addStretch()
 
-        # Tema butonu — daha görünür
         self.theme_btn = QPushButton("🌙  Koyu Tema")
         self.theme_btn.setProperty("variant", "theme")
         self.theme_btn.setMinimumWidth(140)
@@ -222,7 +226,6 @@ class MainWindow(QMainWindow):
     def _build_main_content(self, layout):
         splitter = QSplitter(Qt.Orientation.Horizontal)
 
-        # Word list
         list_container = QWidget()
         list_layout = QVBoxLayout(list_container)
         list_layout.setContentsMargins(0, 0, 0, 0)
@@ -235,7 +238,6 @@ class MainWindow(QMainWindow):
 
         splitter.addWidget(list_container)
 
-        # Detail panel
         self.detail_panel = DetailPanel(self.tts)
         self.detail_panel.speak_requested.connect(self.on_speak_requested)
         self.detail_panel.copy_requested.connect(self.on_copy_requested)
@@ -249,7 +251,6 @@ class MainWindow(QMainWindow):
         layout.addWidget(splitter)
 
     def _build_sidebar(self, layout):
-        # Stats
         stats_label = QLabel("📊  İstatistikler")
         stats_label.setFont(QFont("Segoe UI", 14, QFont.Weight.Bold))
         layout.addWidget(stats_label)
@@ -264,14 +265,12 @@ class MainWindow(QMainWindow):
                     self.not_started_label, self.favorites_label]:
             layout.addWidget(lbl)
 
-        # Progress bar for learned words
         self.progress_bar = QFrame()
         self.progress_bar.setFixedHeight(8)
         layout.addWidget(self.progress_bar)
 
         layout.addSpacing(20)
 
-        # Status list
         status_label = QLabel("📋  Tüm Kelimeler")
         status_label.setFont(QFont("Segoe UI", 14, QFont.Weight.Bold))
         layout.addWidget(status_label)
@@ -288,7 +287,6 @@ class MainWindow(QMainWindow):
         self.light_theme_action.setChecked(theme == "light")
         self.dark_theme_action.setChecked(theme == "dark")
 
-        # Tema butonu metnini güncelle
         if self.theme_manager.is_dark():
             self.theme_btn.setText("☀️  Açık Tema")
         else:
@@ -586,7 +584,6 @@ class MainWindow(QMainWindow):
         self.not_started_label.setText(f"⏳ Başlanmamış: {stats['not_started']}")
         self.favorites_label.setText(f"⭐ Favori: {stats['favorites']}")
 
-        # Update progress bar color based on learned percentage
         total = stats['total']
         if total > 0:
             pct = stats['learned'] / total * 100
@@ -631,6 +628,11 @@ class MainWindow(QMainWindow):
             self.apply_theme()
 
     def start_quiz(self):
+        # Pre-check: avoid creating dialog if no valid entries exist
+        entries = [e for e in self.db.get_all_entries() if e.translations]
+        if not entries:
+            QMessageBox.information(self, "Kelime Quiz", "Quiz için yeterli kelime yok.")
+            return
         dialog = QuizDialog(self.db, self)
         dialog.exec()
 
@@ -676,6 +678,10 @@ class MainWindow(QMainWindow):
             "• Koyu/Açık tema<br>"
             "• JSON/Excel/TXT içe/dışa aktarma"
         )
+
+    def open_contact_dialog(self):
+        dialog = ContactDialog(self)
+        dialog.exec()
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_Delete:
