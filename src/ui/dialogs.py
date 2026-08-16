@@ -476,7 +476,7 @@ class ContactDialog(QDialog):
             <ul style='margin-top: 0; padding-left: 18px;'>
                 <li style='margin-bottom: 6px;'><b>GitHub:</b> <a style='color: #58a6ff;' href='https://github.com/arda803/final-dictionary/issues'>Hata / Öneri Bildir</a></li>
                 <li style='margin-bottom: 6px;'><b>LinkedIn:</b> <a style='color: #58a6ff;' href='https://www.linkedin.com/in/arda-talha-tekinel-882176351/'>LinkedIn Profilim</a></li>
-                <li><b>E-posta:</b> <a style='color: #58a6ff;' href='ardatalhatekinel@gmail.com'>epostaniz@example.com</a></li>
+                <li><b>E-posta:</b> <a style='color: #58a6ff;' href='ardatalhatekinel@gmail.com'>ardatalhatekinel@gmail.com</a></li>
                 <li style='margin-bottom: 6px;'><b>Youtube:</b> <a style='color: #58a6ff;' href='https://www.youtube.com/@Kedilercoksel314'>Youtube Kanalım</a></li>
             </ul>
         </div>
