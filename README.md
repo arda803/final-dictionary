@@ -1,7 +1,7 @@
 # Sözlük - Offline Desktop Dictionary
 
 Rusça-Türkçe ve İngilizce-Türkçe çevrimdışı sözlük uygulaması.
-![Ana Ekran (Koyu Tema)](./siyah_tema.png)
+![Ana Ekran (Koyu Tema)](./görsel/siyah_tema.png)
 ## Özellikler
 
 - 🔍 Kelime, anlam ve örnek cümle içinde arama
@@ -10,12 +10,12 @@ Rusça-Türkçe ve İngilizce-Türkçe çevrimdışı sözlük uygulaması.
 - ⭐ Favori kelimeler
 - 📊 Öğrenme durumu takibi (Öğrenilmedi / Öğreniliyor / Öğrenildi)
 - 🎯 Kelime quiz modu
-![Kelime Quiz](./quiz.png)
+![Kelime Quiz](./görsel/quiz.png)
 - 📖 Günün kelimesi
-![Günün Kelimesi](./random_word.png)
+![Günün Kelimesi](./görsel/random_word.png)
 - 🌙 Koyu / Açık tema
-![Açık Tema](./beyaz_tema.png)
-![Tema Menüsü](./tema.png)
+![Açık Tema](./görsel/beyaz_tema.png)
+![Tema Menüsü](./görsel/tema.png)
 - 📋 Panoya kopyalama
 - 📂 JSON, Excel, TXT içe/dışa aktarma
 - ⌨️ Klavye kısayolları
@@ -43,7 +43,7 @@ python main.py
 | Ctrl+W | Uygulamayı kapat |
 | Delete | Seçili kelimeyi sil |
 | F5 | Listeyi yenile |
-![Klavye Kısayolları](./yardim.png)
+![Klavye Kısayolları](./görsel/yardim.png)
 ## TTS (Seslendirme)
 
 İlk kullanımda internet bağlantısı gereklidir. Ses dosyaları `audio_cache/` klasöründe önbelleğe alınır.
@@ -58,7 +58,7 @@ Python ve PyQt6 kullanılarak geliştirilmiş, gelişmiş özelliklere sahip çe
 * **Kelime Quiz:** Öğrenilen kelimeleri pekiştirmek için etkileşimli test modülü.
 * **Kelime Durumu Takibi:** "Öğrenilmedi", "Öğreniliyor" ve "Öğrenildi" aşamalarıyla durum analizi.
 * **İçe / Dışa Aktarma:** Verileri JSON, Excel ve TXT formatlarında yedekleme veya içe aktarma imkanı.
-![Dosya Menüsü](./dosya.png)
+![Dosya Menüsü](./görsel/dosya.png)
 * **Tema Desteği:** Göz yormayan Açık ve Koyu tema seçenekleri.
 
 ## 🚀 Kurulum ve Çalıştırma
@@ -75,10 +75,10 @@ Python ve PyQt6 kullanılarak geliştirilmiş, gelişmiş özelliklere sahip çe
 | tr-ru | Türkçe | Rusça |
 | en-tr | İngilizce | Türkçe |
 | tr-en | Türkçe | İngilizce |
-![Ayarlar](./ayarlar.png)
+![Ayarlar](./görsel/ayarlar.png)
 
 ## İletişim
 GitHub: https://github.com/arda803/final-dictionary/issues
 LinkedIn: https://www.linkedin.com/in/arda-talha-tekinel-882176351/
 Youtube: https://www.youtube.com/@kedilercoksel314
-![İletişim Bilgileri](./contact.png)
+![İletişim Bilgileri](./görsel/contact.png)
