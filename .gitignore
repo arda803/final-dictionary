@@ -9,7 +9,8 @@ venv/
 dictionary.db
 audio_cache/
 settings.json
-
+dictionary.db-shm
+dictionary.db-wal
 # IDE ve Sistem Dosyaları
 .vscode/
 .idea/

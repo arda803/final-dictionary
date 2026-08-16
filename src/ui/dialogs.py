@@ -1,5 +1,6 @@
 """Dialog windows for the dictionary application."""
 import random
+import unicodedata
 from typing import Optional
 
 from PyQt6.QtWidgets import (
@@ -103,25 +104,36 @@ class SettingsDialog(QDialog):
 
 
 class QuizDialog(QDialog):
+    """Interactive vocabulary quiz with race-condition-safe timer and state management."""
+
+    QUIZ_SIZE = 10
+    ANSWER_DELAY_MS = 1800
+
     def __init__(self, db: DictionaryDB, parent=None):
         super().__init__(parent)
-        self.db = db
         self.setWindowTitle("🎯  Kelime Quiz")
         self.setModal(True)
         self.setMinimumWidth(580)
         self.setMinimumHeight(450)
 
+        self.db = db
         self.entries = [e for e in db.get_all_entries() if e.translations]
         random.shuffle(self.entries)
+
         self.current_index = 0
         self.score = 0
-        self.total = min(10, len(self.entries))
+        self.total = min(self.QUIZ_SIZE, len(self.entries))
         self._answered = False
 
         if self.total == 0:
             QMessageBox.warning(self, "Uyarı", "Quiz için yeterli kelime yok.")
             self.reject()
             return
+
+        # Controlled single-shot timer to avoid race conditions with Skip button
+        self._timer = QTimer(self)
+        self._timer.setSingleShot(True)
+        self._timer.timeout.connect(self.next_question)
 
         self._setup_ui()
         self._show_question()
@@ -142,6 +154,7 @@ class QuizDialog(QDialog):
         self.question_label = QLabel()
         self.question_label.setFont(QFont("Segoe UI", 26, QFont.Weight.Bold))
         self.question_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.question_label.setWordWrap(True)
         layout.addWidget(self.question_label)
 
         # Hint
@@ -175,18 +188,23 @@ class QuizDialog(QDialog):
         # Result
         self.result_label = QLabel()
         self.result_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.result_label.setWordWrap(True)
         self.result_label.setStyleSheet("font-size: 16px; padding: 12px;")
         layout.addWidget(self.result_label)
 
         layout.addStretch()
 
     def _show_question(self):
+        """Display the current question and reset interactive state."""
+        self._timer.stop()
+
         if self.current_index >= self.total:
             self._show_results()
             return
 
         self._answered = False
         entry = self.entries[self.current_index]
+
         self.progress_bar.setValue(self.current_index)
         self.progress_bar.setFormat(f"Soru {self.current_index + 1} / {self.total}")
         self.question_label.setText(entry.word)
@@ -204,6 +222,7 @@ class QuizDialog(QDialog):
         self.answer_input.setFocus()
 
     def check_answer(self):
+        """Validate the user's answer and schedule auto-advance."""
         if self._answered:
             return
         self._answered = True
@@ -211,8 +230,8 @@ class QuizDialog(QDialog):
         self.answer_input.setEnabled(False)
 
         entry = self.entries[self.current_index]
-        user_answer = self.answer_input.text().strip().lower()
-        correct_answers = [t.definition.strip().lower() for t in entry.translations]
+        user_answer = self._normalize_answer(self.answer_input.text())
+        correct_answers = [self._normalize_answer(t.definition) for t in entry.translations]
 
         if user_answer in correct_answers:
             self.score += 1
@@ -224,13 +243,27 @@ class QuizDialog(QDialog):
                 f"❌ Yanlış!  →  Doğru cevap: {', '.join(t.definition for t in entry.translations)}"
             )
 
-        QTimer.singleShot(1800, self.next_question)
+        self._timer.start(self.ANSWER_DELAY_MS)
 
     def next_question(self):
+        """Advance to the next question, cancelling any pending auto-advance timer."""
+        self._timer.stop()
         self.current_index += 1
         self._show_question()
 
+    @staticmethod
+    def _normalize_answer(text: str) -> str:
+        """Normalize user input for reliable comparison."""
+        if not text:
+            return ""
+        normalized = unicodedata.normalize("NFC", text.strip().lower())
+        # Collapse internal whitespace
+        return " ".join(normalized.split())
+
     def _show_results(self):
+        """Display final score and switch skip button to restart mode."""
+        self._timer.stop()
+
         self.progress_bar.setValue(self.total)
         self.progress_bar.setFormat("Tamamlandı")
         self.question_label.setText("🎉  Quiz Tamamlandı!")
@@ -248,27 +281,37 @@ class QuizDialog(QDialog):
         self.answer_input.hide()
         self.check_btn.hide()
 
-        try:
-            self.skip_btn.clicked.disconnect()
-        except Exception:
-            pass
-        self.skip_btn.setText("↺  Tekrar Oyna")
-        self.skip_btn.clicked.connect(self._restart)
+        self._set_skip_action(self._restart, "↺  Tekrar Oyna")
 
     def _restart(self):
+        """Reset quiz state for a new round."""
+        self._timer.stop()
+
         random.shuffle(self.entries)
         self.current_index = 0
         self.score = 0
         self._answered = False
+
         self.answer_input.show()
         self.check_btn.show()
-        self.skip_btn.setText("→  Atla")
+
+        self._set_skip_action(self.next_question, "→  Atla")
+        self._show_question()
+
+    def _set_skip_action(self, slot, text: str):
+        """Safely rewire the skip button to a single slot."""
+        self.skip_btn.setText(text)
         try:
             self.skip_btn.clicked.disconnect()
-        except Exception:
+        except TypeError:
+            # No existing connections (or already cleared)
             pass
-        self.skip_btn.clicked.connect(self.next_question)
-        self._show_question()
+        self.skip_btn.clicked.connect(slot)
+
+    def closeEvent(self, event):
+        """Ensure the auto-advance timer is stopped when the dialog closes."""
+        self._timer.stop()
+        super().closeEvent(event)
 
 
 class AddEntryDialog(QDialog):
@@ -446,30 +489,27 @@ class MoveEntryDialog(QDialog):
         layout.addWidget(button_box)
 
     def get_target_pair(self) -> str:
-        return self.pair_combo.curren
-        tText()
+        return self.pair_combo.currentText()
+
 
 class ContactDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("İletişim ve Hakkında")
-        self.setMinimumSize(460, 350)  # Pencere boyutu rahatlatıldı
+        self.setMinimumSize(460, 350)
 
         layout = QVBoxLayout()
-        layout.setContentsMargins(24, 20, 24, 20)  # İç boşluklar artırıldı
+        layout.setContentsMargins(24, 20, 24, 20)
         layout.setSpacing(12)
 
-        # Başlık
         title_label = QLabel("<h2 style='margin:0;'>Sözlük v2.0</h2>")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title_label)
 
-        # Geliştirici
         dev_label = QLabel("<p style='margin:0; font-size: 13px;'>Geliştirici: <b>Arda Talha Tekinel</b></p>")
         dev_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(dev_label)
 
-        # İletişim İçeriği
         info_html = """
         <div style='line-height: 1.6; font-size: 13px;'>
             <p style='margin-bottom: 8px;'>Uygulamayla ilgili bir hata bildirimi veya öneride bulunmak için kanallar:</p>
@@ -488,7 +528,6 @@ class ContactDialog(QDialog):
 
         layout.addStretch()
 
-        # Kapat Butonu
         btn_close = QPushButton("Kapat")
         btn_close.setMinimumHeight(36)
         btn_close.setCursor(Qt.CursorShape.PointingHandCursor)
