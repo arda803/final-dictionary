@@ -78,9 +78,11 @@ Python ve PyQt6 kullanılarak geliştirilmiş, gelişmiş özelliklere sahip çe
 ![Ayarlar](./görsel/ayarlar.png)
 
 ## İletişim
+
 GitHub: https://github.com/arda803/final-dictionary/issues
 
 LinkedIn: https://www.linkedin.com/in/arda-talha-tekinel-882176351/
 
 Youtube: https://www.youtube.com/@kedilercoksel314
+
 ![İletişim Bilgileri](./görsel/contact.png)
