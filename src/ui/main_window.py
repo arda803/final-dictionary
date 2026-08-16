@@ -148,7 +148,11 @@ class MainWindow(QMainWindow):
         shortcuts_action = QAction("⌨ Klavye Kısayolları", self)
         shortcuts_action.triggered.connect(self.show_shortcuts)
         help_menu.addAction(shortcuts_action)
-
+# --- EKLENEN KISIM ---
+        contact_action = QAction("📬 İletişim & Geri Bildirim", self)
+        contact_action.triggered.connect(self.open_contact_dialog)
+        help_menu.addAction(contact_action)
+        # ---------------------        
         about_action = QAction("ℹ Hakkında", self)
         about_action.triggered.connect(self.show_about)
         help_menu.addAction(about_action)
