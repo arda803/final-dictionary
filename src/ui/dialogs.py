@@ -453,33 +453,44 @@ class ContactDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("İletişim ve Hakkında")
-        self.setFixedSize(380, 240)
+        self.setMinimumSize(460, 350)  # Pencere boyutu rahatlatıldı
 
         layout = QVBoxLayout()
+        layout.setContentsMargins(24, 20, 24, 20)  # İç boşluklar artırıldı
+        layout.setSpacing(12)
 
         # Başlık
-        title_label = QLabel("<h2>Sözlük v2.0</h2>")
+        title_label = QLabel("<h2 style='margin:0;'>Sözlük v2.0</h2>")
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title_label)
 
-        # İletişim ve Geliştirici Bilgileri (HTML formatında tıklanabilir bağlantılar)
+        # Geliştirici
+        dev_label = QLabel("<p style='margin:0; font-size: 13px;'>Geliştirici: <b>Arda Talha Tekinel</b></p>")
+        dev_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(dev_label)
+
+        # İletişim İçeriği
         info_html = """
-        <p style='text-align: center;'>Geliştirici: <b>Arda Talha Tekinel</b></p>
-        <hr>
-        <p>Uygulamayla ilgili bir hata bildirimi veya öneride bulunmak için:</p>
-        <ul>
-            <li><b>GitHub:</b> <a href='https://github.com/arda803/final-dictionary/issues'>Hata / Öneri Bildir</a></li>
-            <li><b>LinkedIn:</b> <a href='https://www.linkedin.com/in/kullanici-adiniz'>LinkedIn Profilim</a></li>
-            <li><b>E-posta:</b> <a href='mailto:epostaniz@example.com'>epostaniz@example.com</a></li>
-        </ul>
+        <div style='line-height: 1.6; font-size: 13px;'>
+            <p style='margin-bottom: 8px;'>Uygulamayla ilgili bir hata bildirimi veya öneride bulunmak için kanallar:</p>
+            <ul style='margin-top: 0; padding-left: 18px;'>
+                <li style='margin-bottom: 6px;'><b>GitHub:</b> <a style='color: #58a6ff;' href='https://github.com/arda803/final-dictionary/issues'>Hata / Öneri Bildir</a></li>
+                <li style='margin-bottom: 6px;'><b>LinkedIn:</b> <a style='color: #58a6ff;' href='https://www.linkedin.com/in/kullanici-adiniz'>LinkedIn Profilim</a></li>
+                <li><b>E-posta:</b> <a style='color: #58a6ff;' href='mailto:epostaniz@example.com'>epostaniz@example.com</a></li>
+            </ul>
+        </div>
         """
         info_label = QLabel(info_html)
-        # Linklerin bilgisayarın varsayılan tarayıcısında açılmasını sağlar
-        info_label.setOpenExternalLinks(True) 
+        info_label.setWordWrap(True)
+        info_label.setOpenExternalLinks(True)
         layout.addWidget(info_label)
+
+        layout.addStretch()
 
         # Kapat Butonu
         btn_close = QPushButton("Kapat")
+        btn_close.setMinimumHeight(36)
+        btn_close.setCursor(Qt.CursorShape.PointingHandCursor)
         btn_close.clicked.connect(self.accept)
         layout.addWidget(btn_close)
 
