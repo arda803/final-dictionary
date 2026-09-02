@@ -65,7 +65,7 @@ Python ve PyQt6 kullanılarak geliştirilmiş, gelişmiş özelliklere sahip çe
 
 1. Repoyu klonlayın:
    ```bash
-   git clone [https://github.com/arda803/sozluk.app.git](https://github.com/arda803/sozluk.app.git)
+   git clone [https://github.com/arda803/final-dictionary.app.git](https://github.com/arda803/final-dictionary.app.git)
    cd sozluk.app
 ## Dil Desteği
 
