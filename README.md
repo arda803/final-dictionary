@@ -43,6 +43,7 @@ python main.py
 | Ctrl+W | Uygulamayı kapat |
 | Delete | Seçili kelimeyi sil |
 | F5 | Listeyi yenile |
+|---------|-------|
 ![Klavye Kısayolları](./görsel/yardim.png)
 ## TTS (Seslendirme)
 
