@@ -43,7 +43,7 @@ python main.py
 | Ctrl+W | Uygulamayı kapat |
 | Delete | Seçili kelimeyi sil |
 | F5 | Listeyi yenile |
-|---------|-------|
+
 ![Klavye Kısayolları](./görsel/yardim.png)
 ## TTS (Seslendirme)
 
@@ -76,7 +76,6 @@ Python ve PyQt6 kullanılarak geliştirilmiş, gelişmiş özelliklere sahip çe
 | tr-ru | Türkçe | Rusça |
 | en-tr | İngilizce | Türkçe |
 | tr-en | Türkçe | İngilizce |
-|-----------|-----------|-----------|
 
 ![Ayarlar](./görsel/ayarlar.png)
 
