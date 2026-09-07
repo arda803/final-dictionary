@@ -76,7 +76,6 @@ Python ve PyQt6 kullanılarak geliştirilmiş, gelişmiş özelliklere sahip çe
 | en-tr | İngilizce | Türkçe |
 | tr-en | Türkçe | İngilizce |
 
-##
 
 ![Ayarlar](./görsel/ayarlar.png)
 
